@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#102b35">
+<meta name="description" content="دادرس‌آب؛ سامانه هوشمند پایش، کنترل و مانیتورینگ قنوات با هدف کاهش بازدیدهای حضوری و تشخیص زودهنگام شرایط غیرعادی.">
+<title>دادرس‌آب | پایش هوشمند قنوات</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+:root{
+ --ink:#102b35;--ink-2:#183f49;--teal:#176b68;--mint:#65cdb5;--paper:#f5f6f2;
+ --white:#fff;--muted:#667b7d;--line:#dce7e2;--gold:#d7a95b;--danger:#d66b5d;
+ --radius:22px;--shadow:0 18px 55px rgba(16,43,53,.10);--max:1180px;
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Vazirmatn",Tahoma,sans-serif;line-height:1.8}
+html[dir="ltr"] body{font-family:'Inter',system-ui,-apple-system,sans-serif}
+a{color:inherit;text-decoration:none}button,input,textarea,select{font:inherit}
+.container{width:min(var(--max),calc(100% - 40px));margin:auto}
+.topbar{background:#0b2028;color:#c8dbd6;font-size:12px;padding:8px 0}
+.topbar .container{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+header{position:sticky;top:0;z-index:20;background:rgba(245,246,242,.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(220,231,226,.8)}
+.nav{height:78px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:900;font-size:21px;white-space:nowrap}
+.brand small{display:block;font-size:9px;letter-spacing:1.5px;color:var(--muted);font-weight:600;line-height:1.2}
+.logo{width:44px;height:44px;flex:none}
+.navlinks{display:flex;align-items:center;gap:22px;font-size:13px;color:#405b60}
+.navlinks a:hover{color:var(--teal)}
+.nav-actions{display:flex;gap:9px;align-items:center}
+.btn{border:0;border-radius:999px;padding:12px 20px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:13px;cursor:pointer;transition:.2s}
+.btn-primary{background:var(--teal);color:white;box-shadow:0 8px 20px rgba(23,107,104,.18)}
+.btn-primary:hover{background:var(--ink);transform:translateY(-2px)}
+.btn-outline{border:1px solid #b8cbc4;color:var(--ink);background:transparent}
+.btn-outline:hover{border-color:var(--teal);color:var(--teal)}
+.lang-switch{border:1px solid var(--teal);background:transparent;color:var(--teal);padding:6px 14px;border-radius:999px;font-weight:800;font-size:12px;cursor:pointer;transition:.2s}
+.lang-switch:hover{background:var(--teal);color:#fff}
+.menu-toggle{display:none;background:none;border:0;font-size:25px;color:var(--ink)}
+.hero{position:relative;overflow:hidden;background:linear-gradient(115deg,#102b35 0%,#123f46 55%,#176b68 100%);color:#fff;padding:82px 0 76px}
+.hero:before{content:"";position:absolute;width:560px;height:560px;border:1px solid rgba(101,205,181,.18);border-radius:50%;left:-180px;top:-260px;box-shadow:0 0 0 45px rgba(101,205,181,.035),0 0 0 100px rgba(101,205,181,.025)}
+.hero:after{content:"";position:absolute;width:380px;height:380px;border:1px solid rgba(255,255,255,.1);border-radius:50%;right:-180px;bottom:-260px;box-shadow:0 0 0 35px rgba(255,255,255,.025),0 0 0 75px rgba(255,255,255,.02)}
+.hero-grid{display:grid;grid-template-columns:1.04fr .96fr;align-items:center;gap:55px;position:relative;z-index:1}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(101,205,181,.35);border-radius:999px;padding:6px 13px;color:#a9ead8;font-size:12px;margin-bottom:22px}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--mint);box-shadow:0 0 0 5px rgba(101,205,181,.14)}
+h1{font-size:clamp(34px,5vw,57px);line-height:1.35;margin:0 0 20px;font-weight:900;letter-spacing:-1.5px}
+.hero h1 span{color:var(--mint)}
+.hero p{color:#d0e1dc;font-size:16px;line-height:2.2;max-width:610px;margin:0 0 28px}
+.hero-buttons{display:flex;gap:12px;flex-wrap:wrap}
+.hero .btn-outline{color:#fff;border-color:rgba(255,255,255,.35)}
+.hero .btn-outline:hover{background:rgba(255,255,255,.08)}
+.hero-note{font-size:11px;color:#a9c5bd;margin-top:20px}
+.hero-visual{position:relative;min-height:390px;display:flex;align-items:center;justify-content:center}
+.hero-photo{position:absolute;inset:18px 20px 18px 0;border-radius:34px;overflow:hidden;border:1px solid rgba(255,255,255,.18);box-shadow:0 30px 80px rgba(0,0,0,.25)}
+html[dir="ltr"] .hero-photo{inset:18px 0 18px 20px}
+.hero-photo img{width:100%;height:100%;object-fit:cover;opacity:.45;filter:saturate(.75)}
+.visual-overlay{position:absolute;inset:18px 20px 18px 0;border-radius:34px;background:linear-gradient(135deg,rgba(16,43,53,.1),rgba(16,43,53,.8))}
+html[dir="ltr"] .visual-overlay{inset:18px 0 18px 20px}
+.monitor-card{position:relative;z-index:2;background:rgba(255,255,255,.96);color:var(--ink);border:1px solid rgba(255,255,255,.7);border-radius:22px;padding:22px;width:min(340px,90%);box-shadow:0 25px 70px rgba(0,0,0,.25);margin:55px 0 0 45px}
+html[dir="ltr"] .monitor-card{margin:55px 45px 0 0}
+.monitor-head{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:800}
+.live{color:#19836f;font-size:10px;display:flex;align-items:center;gap:6px}
+.metric{margin:18px 0 12px;display:flex;align-items:end;justify-content:space-between}
+.metric strong{font-size:38px;line-height:1;font-weight:900}
+.metric small{font-size:11px;color:var(--muted)}
+.chart{width:100%;height:85px;margin:8px 0}
+.chart svg{width:100%;height:100%;overflow:visible}
+.monitor-foot{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.mini{background:#f0f6f3;border-radius:12px;padding:10px;font-size:10px;color:var(--muted)}
+.mini b{display:block;color:var(--ink);font-size:15px}
+.float-tag{position:absolute;z-index:3;bottom:30px;right:0;background:#fff;color:var(--ink);border-radius:14px;padding:12px 16px;box-shadow:var(--shadow);font-size:11px}
+html[dir="ltr"] .float-tag{right:auto;left:0}
+.float-tag b{display:block;color:var(--teal);font-size:14px}
+.section{padding:88px 0}
+.section-head{max-width:720px;margin-bottom:38px}
+.kicker{font-size:12px;color:var(--teal);font-weight:800;letter-spacing:.4px;margin-bottom:10px}
+h2{font-size:clamp(26px,3.5vw,39px);line-height:1.5;margin:0 0 13px;font-weight:900;letter-spacing:-.7px}
+.section-head p,.muted{color:var(--muted);font-size:14px;line-height:2.1;margin:0}
+.problem-grid{display:grid;grid-template-columns:.92fr 1.08fr;gap:45px;align-items:center}
+.problem-image{height:420px;border-radius:var(--radius);overflow:hidden;position:relative;box-shadow:var(--shadow)}
+.problem-image img{width:100%;height:100%;object-fit:cover}
+.image-caption{position:absolute;bottom:18px;right:18px;left:18px;padding:15px 18px;background:rgba(16,43,53,.83);color:#fff;border-radius:14px;font-size:12px}
+.problem-list{display:grid;gap:15px;margin-top:25px}
+.problem-item{display:flex;gap:14px;align-items:flex-start}
+.iconbox{width:42px;height:42px;flex:none;border-radius:14px;background:#e2f1eb;color:var(--teal);display:grid;place-items:center;font-size:20px}
+.problem-item b{display:block;font-size:14px;margin-bottom:3px}
+.problem-item span{font-size:12px;color:var(--muted)}
+.value-band{background:#e8f1ed;padding:30px 0}
+.value-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.value{text-align:center;padding:12px}
+.value strong{display:block;color:var(--teal);font-size:27px;font-weight:900}
+.value span{font-size:12px;color:#4c6665}
+.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}
+.feature{background:#fff;border:1px solid var(--line);border-radius:19px;padding:24px;transition:.2s}
+.feature:hover{transform:translateY(-5px);box-shadow:var(--shadow);border-color:#b7d9cd}
+.feature .iconbox{margin-bottom:17px;width:48px;height:48px;font-size:22px}
+.feature h3{font-size:16px;margin:0 0 8px}
+.feature p{font-size:12px;color:var(--muted);line-height:2;margin:0}
+.tech-section{background:#102b35;color:#fff;position:relative;overflow:hidden}
+.tech-section .section-head p{color:#b6cbc5}
+.tech-section .kicker{color:var(--mint)}
+.architecture{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;position:relative;margin-top:45px}
+.architecture:before{content:"";position:absolute;top:42px;right:10%;left:10%;height:1px;background:linear-gradient(90deg,transparent,var(--mint),transparent);opacity:.55}
+.arch-step{position:relative;text-align:center;padding:0 10px}
+.arch-icon{width:82px;height:82px;margin:0 auto 17px;border-radius:25px;background:#1b4650;border:1px solid rgba(101,205,181,.3);display:grid;place-items:center;font-size:29px;color:var(--mint);position:relative;z-index:1}
+.arch-step h3{font-size:14px;margin:0 0 7px}
+.arch-step p{font-size:11px;color:#b6cbc5;line-height:1.9;margin:0}
+.tech-note{margin-top:36px;padding:15px 18px;border:1px solid rgba(101,205,181,.2);border-radius:14px;color:#c5d8d2;font-size:11px;background:rgba(255,255,255,.035)}
+.workflow{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.workflow-step{padding:20px 16px;background:#fff;border:1px solid var(--line);border-radius:16px;position:relative}
+.workflow-step .num{font-size:11px;color:var(--teal);font-weight:900}
+.workflow-step h3{font-size:13px;margin:8px 0 6px}
+.workflow-step p{font-size:11px;color:var(--muted);margin:0;line-height:1.9}
+.demo-section{background:#edf3ef}
+.demo-shell{background:#fff;border:1px solid var(--line);border-radius:25px;box-shadow:var(--shadow);overflow:hidden}
+.demo-top{background:#f8faf8;border-bottom:1px solid var(--line);padding:17px 22px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.demo-top b{font-size:14px}
+.demo-label{font-size:10px;color:#916b2b;background:#fff4d9;border:1px solid #f0dfb5;padding:5px 10px;border-radius:999px}
+.demo-body{padding:22px}
+.demo-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px}
+.tab{border:1px solid var(--line);background:#fff;color:var(--muted);padding:8px 15px;border-radius:999px;font-size:11px;cursor:pointer}
+.tab.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+.dashboard-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.dash-card{background:#f6f9f7;border:1px solid #e5eee9;border-radius:15px;padding:15px}
+.dash-card span{font-size:10px;color:var(--muted)}
+.dash-card strong{display:block;font-size:25px;margin:5px 0 0}
+.dash-card small{font-size:9px;color:#21806d}
+.demo-chart-wrap{display:grid;grid-template-columns:1.5fr 1fr;gap:13px;margin-top:13px}
+.demo-panel{border:1px solid var(--line);border-radius:15px;padding:17px}
+.demo-panel h4{font-size:12px;margin:0 0 12px}
+.demo-line{width:100%;height:160px}
+.demo-line svg{width:100%;height:100%}
+.status-list{display:grid;gap:10px}
+.status-row{display:flex;align-items:center;justify-content:space-between;font-size:11px;border-bottom:1px solid #edf1ee;padding-bottom:8px}
+.status-pill{border-radius:999px;background:#e3f4ed;color:#1b8069;padding:3px 8px;font-size:9px}
+.status-pill.warn{background:#fff0df;color:#a66a22}
+.demo-description{font-size:10px;color:var(--muted);margin-top:15px}
+.audience-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.audience{background:#fff;border:1px solid var(--line);border-radius:18px;padding:22px}
+.audience h3{font-size:15px;margin:0 0 8px}
+.audience p{font-size:12px;color:var(--muted);margin:0;line-height:2}
+.gallery-grid{display:grid;grid-template-columns:1.2fr .8fr .8fr;grid-template-rows:180px 180px;gap:13px}
+.gallery-grid img{width:100%;height:100%;object-fit:cover;border-radius:16px}
+.gallery-grid .large{grid-row:span 2}
+.trust-note{background:#fff;border:1px solid var(--line);padding:20px;border-radius:17px;margin-top:22px;font-size:12px;color:var(--muted)}
+html[dir="rtl"] .trust-note{border-right:4px solid var(--mint)}
+html[dir="ltr"] .trust-note{border-left:4px solid var(--mint)}
+.cta{background:linear-gradient(115deg,#176b68,#102b35);color:#fff;padding:65px 0}
+.cta-grid{display:flex;justify-content:space-between;align-items:center;gap:30px}
+.cta h2{font-size:30px;margin-bottom:8px}
+.cta p{font-size:13px;color:#c5ddd5;margin:0}
+.contact-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:35px}
+.contact-info{background:#102b35;color:#fff;border-radius:22px;padding:27px}
+.contact-info p{font-size:12px;color:#c1d3cd;line-height:2}
+.contact-detail{padding:12px 0;border-top:1px solid rgba(255,255,255,.12);font-size:12px;color:#d8e5e0}
+.form-card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:27px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.field{display:grid;gap:6px}
+.field.full{grid-column:1/-1}
+.field label{font-size:11px;color:#526b6b;font-weight:700}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);background:#fbfcfa;border-radius:11px;padding:11px 13px;outline:none;font-size:12px;color:var(--ink)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(23,107,104,.08)}
+.field textarea{min-height:100px;resize:vertical}
+.form-message{display:none;margin-top:12px;color:var(--teal);font-size:12px}
+footer{background:#0b2028;color:#d2e0da;padding:38px 0 20px}
+.footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:35px;padding-bottom:28px}
+footer p,footer a{font-size:11px;color:#9eb6ad;line-height:2}
+footer h4{font-size:13px;color:#fff;margin:0 0 12px}
+.footer-links{display:grid;gap:5px}
+.copyright{border-top:1px solid rgba(255,255,255,.1);padding-top:15px;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;font-size:10px;color:#79958a}
+.theme-panel{position:fixed;left:18px;bottom:18px;z-index:30;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:16px;padding:12px;display:flex;align-items:center;gap:8px}
+html[dir="ltr"] .theme-panel{left:auto;right:18px}
+.theme-panel span{font-size:10px;color:var(--muted);margin-left:4px}
+.swatch{width:22px;height:22px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px #ccd8d2;cursor:pointer}
+@media(max-width:900px){.navlinks{display:none;position:absolute;top:78px;right:0;left:0;background:var(--paper);padding:20px 25px;border-bottom:1px solid var(--line);flex-direction:column;align-items:flex-start}.navlinks.open{display:flex}.menu-toggle{display:block}.nav-actions .btn-outline{display:none}.hero-grid,.problem-grid,.contact-grid{grid-template-columns:1fr}.hero-visual{min-height:340px}.feature-grid{grid-template-columns:repeat(2,1fr)}.workflow{grid-template-columns:repeat(3,1fr)}.dashboard-grid{grid-template-columns:repeat(2,1fr)}.audience-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.container{width:min(100% - 28px,var(--max))}.topbar .container{justify-content:center}.nav{height:68px}.brand{font-size:18px}.navlinks{top:68px}.nav-actions .btn-primary{padding:9px 12px;font-size:11px}.hero{padding:58px 0 48px}.hero-grid{gap:20px}.hero-visual{min-height:300px}.monitor-card{margin:35px 0 0 20px;padding:16px}.float-tag{bottom:12px}.section{padding:62px 0}.problem-image{height:300px}.value-grid{grid-template-columns:1fr 1fr;gap:10px}.feature-grid,.audience-grid{grid-template-columns:1fr}.architecture{grid-template-columns:1fr 1fr;row-gap:28px}.architecture:before{display:none}.workflow{grid-template-columns:1fr 1fr}.demo-chart-wrap{grid-template-columns:1fr}.gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:150px 150px}.gallery-grid .large{grid-row:span 2}.cta-grid{display:block}.cta .btn{margin-top:20px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.footer-grid{grid-template-columns:1fr 1fr}.footer-grid>div:first-child{grid-column:1/-1}.theme-panel{left:10px;bottom:10px;padding:8px}.theme-panel span{display:none}}
+
+/* ===== DADRAS AB / Responsive Tech Design System ===== */
+:root{
+ --surface:#ffffff;--surface-soft:#edf4f1;--glow:rgba(101,205,181,.22);
+ --ease:cubic-bezier(.2,.75,.25,1);
+}
+html{scroll-padding-top:100px;overflow-x:clip}
+body{overflow-x:clip;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+ outline:3px solid rgba(101,205,181,.75);outline-offset:3px
+}
+::selection{background:var(--mint);color:var(--ink)}
+.reading-progress{height:3px;position:fixed;top:0;right:0;width:0;z-index:100;background:linear-gradient(90deg,var(--mint),#fff);box-shadow:0 0 14px var(--glow)}
+html[dir="ltr"] .reading-progress{right:auto;left:0}
+.topbar{letter-spacing:.1px}
+header{box-shadow:0 8px 30px rgba(16,43,53,.035)}
+.brand{gap:12px}
+.logo{filter:drop-shadow(0 5px 9px rgba(23,107,104,.13))}
+.navlinks a{position:relative;padding:9px 0}
+.navlinks a:after{content:"";position:absolute;right:0;bottom:2px;width:0;height:2px;background:var(--mint);transition:width .25s var(--ease)}
+html[dir="ltr"] .navlinks a:after{right:auto;left:0}
+.navlinks a:hover:after{width:100%}
+.btn{min-height:46px;transition:transform .25s var(--ease),box-shadow .25s var(--ease),background .25s}
+.btn-primary:hover{box-shadow:0 12px 28px rgba(23,107,104,.27)}
+.hero{
+ isolation:isolate;
+ background:
+  radial-gradient(ellipse at 76% 42%,rgba(101,205,181,.17),transparent 34%),
+  linear-gradient(115deg,#0a2029 0%,#103942 52%,#176b68 100%);
+}
+.hero:before{
+ width:720px;height:720px;left:-240px;top:-350px;
+ background:repeating-radial-gradient(circle,transparent 0 42px,rgba(101,205,181,.07) 43px 44px);
+ box-shadow:none;opacity:.75
+}
+.hero:after{width:520px;height:520px;right:-230px;bottom:-330px}
+.hero-grid{gap:clamp(28px,5vw,70px)}
+.hero h1{max-width:700px;text-wrap:balance}
+.hero p{max-width:590px}
+.hero-visual{min-height:440px;isolation:isolate}
+.hero-photo{transform:perspective(900px) rotateY(-3deg)}
+html[dir="ltr"] .hero-photo{transform:perspective(900px) rotateY(3deg)}
+.hero-photo img{transform:scale(1.04);transition:transform 1.2s var(--ease)}
+.hero-visual:hover .hero-photo img{transform:scale(1.09)}
+.visual-overlay{
+ background:
+  linear-gradient(135deg,rgba(8,30,37,.08),rgba(8,30,37,.84)),
+  repeating-linear-gradient(0deg,transparent 0 34px,rgba(255,255,255,.045) 35px 36px),
+  repeating-linear-gradient(90deg,transparent 0 34px,rgba(255,255,255,.045) 35px 36px);
+}
+.monitor-card{
+ width:min(365px,86%);padding:23px;backdrop-filter:blur(14px);
+ border:1px solid rgba(255,255,255,.85);
+ box-shadow:0 30px 90px rgba(0,0,0,.32),0 0 0 8px rgba(255,255,255,.045);
+ animation:cardFloat 6s ease-in-out infinite
+}
+@keyframes cardFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.hero-tech-tag{
+ position:absolute;z-index:4;color:#d5eee6;background:rgba(8,31,38,.68);
+ border:1px solid rgba(151,226,205,.3);backdrop-filter:blur(12px);
+ border-radius:10px;padding:9px 12px;font:700 9px/1.4 Arial,sans-serif;letter-spacing:1px
+}
+.hero-tech-tag b{color:var(--mint);margin-right:12px}
+html[dir="ltr"] .hero-tech-tag b{margin-right:0;margin-left:12px}
+.hero-tech-tag span{color:var(--mint)}
+.tag-top{top:28px;left:0}
+html[dir="ltr"] .tag-top{left:auto;right:0}
+.tag-bottom{bottom:26px;left:18px}
+html[dir="ltr"] .tag-bottom{left:auto;right:18px}
+.tag-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--mint);margin-left:7px;box-shadow:0 0 0 4px rgba(101,205,181,.14)}
+html[dir="ltr"] .tag-dot{margin-left:0;margin-right:7px}
+.float-tag{right:-6px;bottom:22px;box-shadow:0 18px 45px rgba(0,0,0,.18)}
+html[dir="ltr"] .float-tag{right:auto;left:-6px}
+.section{position:relative}
+.section-head{max-width:760px}
+.kicker{display:flex;align-items:center;gap:10px}
+.kicker:before{content:"";width:24px;height:2px;background:var(--mint);display:inline-block}
+.problem-image,.feature,.audience,.workflow-step,.demo-shell,.form-card,.contact-info{box-shadow:0 12px 35px rgba(16,43,53,.045)}
+.problem-image{border:1px solid rgba(255,255,255,.65)}
+.value-band{position:relative;overflow:hidden}
+.value-band:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);pointer-events:none}
+.value{border-left:1px solid rgba(23,107,104,.12)}
+html[dir="ltr"] .value{border-left:0;border-right:1px solid rgba(23,107,104,.12)}
+.value:last-child{border-left:0;border-right:0}
+.feature{position:relative;overflow:hidden;min-height:190px}
+.feature:after{content:"";position:absolute;width:100px;height:100px;border:1px solid rgba(101,205,181,.25);border-radius:50%;left:-55px;bottom:-60px;transition:transform .4s var(--ease)}
+html[dir="ltr"] .feature:after{left:auto;right:-55px}
+.feature:hover:after{transform:scale(1.6)}
+.feature .iconbox{box-shadow:inset 0 0 0 1px rgba(23,107,104,.07)}
+.tech-section{
+ background:
+  radial-gradient(ellipse at 10% 15%,rgba(101,205,181,.11),transparent 30%),
+  linear-gradient(135deg,#0a2029,#102f39 65%,#123f46)
+}
+.arch-step{padding:0 14px}
+.arch-icon{box-shadow:0 0 0 7px rgba(101,205,181,.045),0 15px 30px rgba(0,0,0,.16);transition:transform .3s var(--ease),background .3s}
+.arch-step:hover .arch-icon{transform:translateY(-6px);background:#245b5d}
+.workflow-step{transition:transform .25s var(--ease),border-color .25s}
+.workflow-step:hover{transform:translateY(-5px);border-color:#a8d4c5}
+.demo-shell{box-shadow:0 24px 70px rgba(16,43,53,.1)}
+.demo-top{background:linear-gradient(90deg,#f7faf8,#edf5f1)}
+.demo-label{font-weight:800;letter-spacing:.3px}
+.tab{min-height:40px;transition:all .2s}
+.tab:hover:not(.active){border-color:var(--mint);color:var(--teal)}
+.dash-card{transition:transform .2s,border-color .2s}
+.dash-card:hover{transform:translateY(-3px);border-color:#b4d8ca}
+.gallery-grid{gap:15px}
+.gallery-grid img{filter:saturate(.88);transition:filter .35s,transform .5s var(--ease)}
+.gallery-grid img:hover{filter:saturate(1.08);transform:scale(1.015)}
+.cta{position:relative;overflow:hidden}
+.cta:after{content:"";position:absolute;width:360px;height:360px;border:1px solid rgba(255,255,255,.12);border-radius:50%;left:-140px;top:-230px;box-shadow:0 0 0 35px rgba(255,255,255,.025),0 0 0 75px rgba(255,255,255,.02);pointer-events:none}
+html[dir="ltr"] .cta:after{left:auto;right:-140px}
+.cta-grid{position:relative;z-index:1}
+.contact-info{background:linear-gradient(145deg,#102b35,#174e52)}
+.form-card{box-shadow:0 20px 55px rgba(16,43,53,.07)}
+.field input,.field select,.field textarea{min-height:46px;transition:border-color .2s,box-shadow .2s}
+.field textarea{min-height:120px}
+footer{background:radial-gradient(ellipse at 85% 0%,rgba(23,107,104,.2),transparent 35%),#091d24}
+.theme-panel{z-index:35;backdrop-filter:blur(14px);background:rgba(255,255,255,.92)}
+.swatch{width:24px;height:24px;transition:transform .2s}
+.swatch:hover{transform:scale(1.18)}
+.mobile-dock{display:none}
+.reveal-ready [data-section],.reveal-ready .feature,.reveal-ready .workflow-step,.reveal-ready .audience{will-change:transform,opacity}
+.js-reveal{opacity:0;transform:translateY(18px);transition:opacity .65s var(--ease),transform .65s var(--ease)}
+.js-reveal.is-visible{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}
+ *,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+ .js-reveal{opacity:1;transform:none}
+}
+@media(max-width:1100px){
+ .container{width:min(100% - 48px,var(--max))}
+ .nav{gap:14px}.navlinks{gap:14px;font-size:12px}
+ .nav-actions .btn{padding-inline:14px}
+ .hero-grid{grid-template-columns:1fr .9fr;gap:28px}
+ .hero-visual{min-height:390px}
+ .architecture{gap:8px}
+ .workflow{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:900px){
+ html{scroll-padding-top:78px}
+ .topbar{font-size:10px}
+ .nav{height:72px}
+ .navlinks{top:72px;right:0;left:0;padding:18px 24px 24px;gap:5px;box-shadow:0 18px 25px rgba(16,43,53,.1)}
+ .navlinks a{width:100%;padding:10px 4px;border-bottom:1px solid rgba(16,43,53,.06)}
+ .navlinks a:after{display:none}
+ .menu-toggle{width:42px;height:42px;border-radius:12px;background:#e8f1ed}
+ .nav-actions .btn-outline{display:none}
+ .hero{padding:62px 0 55px}
+ .hero-grid{grid-template-columns:1fr;gap:22px}
+ .hero-grid>div:first-child{max-width:760px}
+ .hero-visual{width:min(100%,650px);margin:0 auto;min-height:370px}
+ .hero-photo,.visual-overlay{inset:8px 12px 8px 0}
+ .problem-grid{gap:30px}
+ .problem-image{height:360px}
+ .architecture{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .architecture:before{top:40px}
+ .arch-icon{width:72px;height:72px}
+ .dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .audience-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .contact-grid{gap:20px}
+}
+@media(max-width:640px){
+ .container{width:calc(100% - 32px)}
+ .topbar .container{justify-content:center;text-align:center;gap:2px}
+ .topbar .container span:last-child{display:none}
+ .nav{height:64px}
+ .brand{font-size:17px;gap:8px}
+ .brand small{font-size:8px}
+ .logo{width:39px;height:39px}
+ .navlinks{top:64px;padding:12px 18px 20px}
+ .nav-actions{gap:6px}
+ .nav-actions .btn-primary{font-size:10px;padding:8px 11px;min-height:38px}
+ .menu-toggle{width:38px;height:38px;font-size:21px}
+ .hero{padding:48px 0 34px}
+ .hero-grid{gap:12px}
+ .eyebrow{font-size:10px;margin-bottom:15px}
+ h1{font-size:clamp(31px,9vw,43px);line-height:1.42;letter-spacing:-.8px;margin-bottom:13px}
+ .hero p{font-size:13px;line-height:2.05;margin-bottom:19px}
+ .hero-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+ .hero-buttons .btn{font-size:10px;padding:10px 8px;min-height:44px;text-align:center}
+ .hero-note{font-size:10px;line-height:1.8;margin-top:13px}
+ .hero-visual{min-height:285px;width:100%;margin-top:4px}
+ .hero-photo,.visual-overlay{inset:8px 0;border-radius:22px}
+ .monitor-card{width:min(285px,83%);padding:14px;border-radius:17px;margin:25px 0 0 4px}
+ html[dir="ltr"] .monitor-card{margin:25px 4px 0 0}
+ .monitor-head{font-size:10px}
+ .metric{margin:13px 0 8px}
+ .metric strong{font-size:30px}
+ .chart{height:62px}
+ .monitor-foot{gap:6px}
+ .mini{padding:7px;font-size:9px}
+ .mini b{font-size:12px}
+ .float-tag{right:0;bottom:7px;padding:9px 11px;font-size:9px;border-radius:11px}
+ html[dir="ltr"] .float-tag{right:auto;left:0}
+ .float-tag b{font-size:11px}
+ .hero-tech-tag{font-size:7px;padding:7px 8px}
+ .tag-top{top:0;left:0}
+ .tag-bottom{bottom:0;left:6px}
+ .section{padding:50px 0}
+ .section-head{margin-bottom:25px}
+ .kicker{font-size:10px;margin-bottom:7px}
+ h2{font-size:25px;line-height:1.5;margin-bottom:8px}
+ .section-head p,.muted{font-size:12px;line-height:2}
+ .problem-grid{gap:24px}
+ .problem-image{height:255px;border-radius:18px}
+ .image-caption{font-size:10px;padding:10px 12px;bottom:10px;right:10px;left:10px}
+ .problem-list{gap:13px;margin-top:18px}
+ .problem-item{gap:10px}
+ .iconbox{width:38px;height:38px;border-radius:12px;font-size:17px}
+ .problem-item b{font-size:12px}
+ .problem-item span{font-size:10px;line-height:1.9;display:block}
+ .value-band{padding:17px 0}
+ .value-grid{gap:4px}
+ .value{padding:10px 4px;border-left:0;border-right:0}
+ .value strong{font-size:20px}
+ .value span{font-size:9px;line-height:1.7;display:block}
+ .feature-grid{grid-template-columns:1fr 1fr;gap:9px}
+ .feature{padding:15px 13px;min-height:174px;border-radius:15px}
+ .feature .iconbox{width:39px;height:39px;font-size:18px;margin-bottom:11px}
+ .feature h3{font-size:12px;line-height:1.7}
+ .feature p{font-size:10px;line-height:1.85}
+ .architecture{grid-template-columns:1fr 1fr;gap:22px 10px;margin-top:28px}
+ .architecture:before{display:none}
+ .arch-step{padding:0 5px}
+ .arch-icon{width:62px;height:62px;border-radius:19px;font-size:23px;margin-bottom:11px}
+ .arch-step h3{font-size:11px;line-height:1.7}
+ .arch-step p{font-size:9px;line-height:1.8}
+ .tech-note{font-size:10px;line-height:1.9;margin-top:25px;padding:12px}
+ .workflow{grid-template-columns:1fr 1fr;gap:9px}
+ .workflow-step{padding:13px 12px;border-radius:13px}
+ .workflow-step h3{font-size:11px}
+ .workflow-step p{font-size:9px;line-height:1.8}
+ .demo-shell{border-radius:17px}
+ .demo-top{padding:12px;align-items:flex-start;flex-direction:column;gap:7px}
+ .demo-top b{font-size:11px}
+ .demo-label{font-size:8px}
+ .demo-body{padding:12px}
+ .demo-tabs{flex-wrap:nowrap;overflow-x:auto;padding-bottom:5px;margin:0 -2px 14px;scrollbar-width:thin}
+ .tab{flex:0 0 auto;padding:8px 12px;font-size:10px;min-height:38px}
+ .dashboard-grid{gap:8px}
+ .dash-card{padding:11px;border-radius:12px;min-width:0}
+ .dash-card span{font-size:9px}
+ .dash-card strong{font-size:21px;overflow-wrap:anywhere}
+ .dash-card small{font-size:8px}
+ .demo-chart-wrap{grid-template-columns:1fr;gap:9px;margin-top:9px}
+ .demo-panel{padding:12px}
+ .demo-panel h4{font-size:10px}
+ .demo-line{height:125px}
+ .status-row{font-size:10px}
+ .demo-description{font-size:9px;line-height:1.9}
+ .audience-grid{grid-template-columns:1fr;gap:9px}
+ .audience{padding:16px;border-radius:14px}
+ .audience h3{font-size:13px}
+ .audience p{font-size:10px;line-height:1.9}
+ .gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:125px 125px;gap:8px}
+ .gallery-grid .large{grid-row:span 2}
+ .gallery-grid img{border-radius:12px}
+ .trust-note{font-size:10px;line-height:2;padding:13px;margin-top:15px}
+ .cta{padding:38px 0}
+ .cta h2{font-size:22px}
+ .cta p{font-size:11px;line-height:1.9}
+ .cta .btn{margin-top:16px;width:100%;font-size:11px}
+ .contact-grid{grid-template-columns:1fr;gap:12px}
+ .contact-info,.form-card{padding:19px;border-radius:16px}
+ .contact-info h3{font-size:17px!important;margin-top:16px!important}
+ .contact-info p{font-size:10px}
+ .contact-detail{font-size:10px;line-height:1.9}
+ .form-grid{grid-template-columns:1fr;gap:10px}
+ .field.full{grid-column:auto}
+ .field label{font-size:10px}
+ .field input,.field select,.field textarea{font-size:12px;padding:10px 11px}
+ .field textarea{min-height:90px}
+ .field .btn{width:100%}
+ .footer-grid{grid-template-columns:1fr 1fr;gap:20px}
+ .footer-grid>div:first-child{grid-column:1/-1}
+ footer{padding:30px 0 18px}
+ footer p,footer a{font-size:10px}
+ .copyright{font-size:9px;line-height:1.8}
+ .theme-panel{left:10px;bottom:75px;padding:7px;border-radius:12px;gap:6px}
+ html[dir="ltr"] .theme-panel{left:auto;right:10px}
+ .swatch{width:20px;height:20px}
+ .mobile-dock{
+  position:fixed;display:grid;grid-template-columns:1fr 1fr;gap:8px;
+  right:10px;left:10px;bottom:10px;z-index:32;padding:8px;
+  border:1px solid rgba(16,43,53,.1);border-radius:16px;
+  background:rgba(250,252,250,.92);backdrop-filter:blur(16px);
+  box-shadow:0 10px 35px rgba(8,31,38,.18)
+ }
+ .mobile-dock a{display:flex;align-items:center;justify-content:center;min-height:42px;border-radius:11px;font-size:10px;font-weight:800}
+ .dock-demo{background:#e7f2ed;color:var(--ink)}
+ .dock-contact{background:var(--teal);color:#fff}
+ body{padding-bottom:74px}
+}
+@media(max-width:380px){
+ .container{width:calc(100% - 24px)}
+ .hero-buttons{grid-template-columns:1fr}
+ .hero-visual{min-height:260px}
+ .feature-grid{grid-template-columns:1fr}
+ .workflow{grid-template-columns:1fr}
+ .dashboard-grid{grid-template-columns:1fr 1fr}
+ .gallery-grid{grid-template-rows:105px 105px}
+ .nav-actions .btn-primary{display:none}
+}
+</style>
+</head>
+<body>
+<div class="reading-progress" id="readingProgress" aria-hidden="true"></div>
+<div class="topbar"><div class="container"><span data-i18n="topbar_sub">سامانه هوشمند پایش، کنترل و مانیتورینگ قنوات</span><span data-i18n="topbar_tag">فناوری برای حفاظت هوشمندانه از میراث آب</span></div></div>
+<header>
+ <div class="container nav">
+  <a class="brand" href="#home" aria-label="دادرس آب">
+   <svg class="logo" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+    <path d="M7 35C16 20 25 20 32 32C39 44 48 44 57 29" stroke="var(--teal)" stroke-width="5" stroke-linecap="round"/>
+    <path d="M7 46C16 31 25 31 32 43C39 55 48 55 57 40" stroke="var(--mint)" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M32 5L39 17L32 29L25 17L32 5Z" fill="var(--ink)"/>
+    <path d="M32 13V22" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="32" cy="17" r="2" fill="var(--mint)"/>
+   </svg>
+   <span><span data-i18n="brand_title">دادرس‌آب</span><small>DADRAS AB · QANAT INTELLIGENCE</small></span>
+  </a>
+  <nav class="navlinks" id="navlinks">
+   <a href="#about" data-i18n="nav_about">معرفی سامانه</a>
+   <a href="#features" data-i18n="nav_features">قابلیت‌ها</a>
+   <a href="#technology" data-i18n="nav_tech">فناوری</a>
+   <a href="#demo" data-i18n="nav_demo">دموی سامانه</a>
+   <a href="#audience" data-i18n="nav_audience">مخاطبان</a>
+   <a href="#contact" data-i18n="nav_contact">ارتباط</a>
+  </nav>
+  <div class="nav-actions">
+   <button class="lang-switch" id="langToggle">EN</button>
+   <a class="btn btn-outline" href="#technology" data-i18n="btn_view_tech">مشاهده فناوری</a>
+   <a class="btn btn-primary" href="#contact" data-i18n="btn_req_coop">درخواست همکاری ↗</a>
+   <button class="menu-toggle" id="menuToggle" aria-label="باز کردن منو">☰</button>
+  </div>
+ </div>
+</header>
+
+<main>
+<section class="hero" id="home" data-section="hero">
+ <div class="container hero-grid">
+  <div>
+   <div class="eyebrow"><i class="pulse"></i> <span data-i18n="hero_eyebrow">پایش هوشمند زیرساخت‌های حیاتی آب</span></div>
+   <h1 data-i18n="hero_title">قنات را <span>هوشمندانه</span> پایش کنید؛ پیش از آنکه دیر شود.</h1>
+   <p data-i18n="hero_desc">دادرس‌آب سامانه‌ای تخصصی برای پایش، کنترل و مانیتورینگ قنوات است؛ با دریافت و تحلیل پیوسته داده‌های محیطی و فیزیکی، به شناسایی زودهنگام شرایط غیرعادی، کاهش نیاز به بازدیدهای حضوری مستمر و تصمیم‌گیری آگاهانه‌تر کمک می‌کند.</p>
+   <div class="hero-buttons">
+    <a class="btn btn-primary" href="#demo" data-i18n="btn_demo">تجربه دموی سامانه <span>←</span></a>
+    <a class="btn btn-outline" href="#contact" data-i18n="btn_consult">درخواست معرفی و مشاوره</a>
+   </div>
+   <div class="hero-note" data-i18n="hero_note">راهکاری تخصصی برای مالکان، بهره‌برداران و سازمان‌های متولی قنوات</div>
+  </div>
+  <div class="hero-visual">
+   <div class="hero-photo"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=85" alt="چشم‌انداز طبیعی و مسیر آب؛ تصویر جایگزین"></div><div class="visual-overlay"></div>
+   <div class="monitor-card">
+    <div class="monitor-head"><span data-i18n="card_sample_status">نمایش نمونه وضعیت قنات</span><span class="live"><i class="pulse"></i> DEMO LIVE</span></div>
+    <div class="metric"><div><strong id="card_val">۲۴٫۶</strong><br><small data-i18n="card_depth">عمق آب · مقدار نمونه</small></div><span style="color:#16836d;font-size:12px" data-i18n="card_active">● پایش فعال</span></div>
+    <div class="chart"><svg viewBox="0 0 300 85" preserveAspectRatio="none"><path d="M0 64 C25 58 30 28 58 39 S95 69 120 45 S157 17 180 34 S220 60 245 30 S275 25 300 12" stroke="#176b68" stroke-width="3" fill="none"/><path d="M0 64 C25 58 30 28 58 39 S95 69 120 45 S157 17 180 34 S220 60 245 30 S275 25 300 12 L300 85 L0 85Z" fill="#65cdb5" opacity=".15"/></svg></div>
+    <div class="monitor-foot"><div class="mini"><span data-i18n="card_vib">وضعیت لرزش</span><b data-i18n="card_normal">عادی</b></div><div class="mini"><span data-i18n="card_comm">سلامت ارتباط</span><b data-i18n="card_conn">متصل</b></div></div>
+   </div>
+   <div class="float-tag"><span data-i18n="float_sub">از داده تا تصمیم</span><b data-i18n="float_main">پایش پیوسته، آگاهی بیشتر</b></div>
+   <div class="hero-tech-tag tag-top"><span class="tag-dot"></span> SENSOR NETWORK <b>01 / 04</b></div>
+   <div class="hero-tech-tag tag-bottom">REAL-TIME INSIGHT <span>●</span></div>
+  </div>
+ </div>
+</section>
+
+<section class="section" id="about" data-section="about">
+ <div class="container problem-grid">
+  <div class="problem-image"><img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=1000&q=85" alt="جریان آب؛ تصویر جایگزین قابل تعویض"><div class="image-caption" data-i18n="img_caption">قنات، زیرساختی ارزشمند که حفاظت از آن به شناخت مستمر وضعیت نیاز دارد.</div></div>
+  <div>
+   <div class="section-head"><div class="kicker" data-i18n="why_kicker">چرا دادرس‌آب؟</div><h2 data-i18n="why_title">از بازدیدهای مقطعی تا پایش داده‌محور</h2><p data-i18n="why_desc">قنوات در محیطی گسترده و گاه دشوارگذر قرار دارند. اتکا به بازدیدهای حضوری و مشاهده‌های مقطعی می‌تواند شناسایی برخی تغییرات را به تأخیر بیندازد. دادرس‌آب با فراهم‌کردن بستری برای پایش مستمر، دید دقیق‌تری از وضعیت قنات در اختیار مسئولان قرار می‌دهد.</p></div>
+   <div class="problem-list">
+    <div class="problem-item"><div class="iconbox">⌁</div><div><b data-i18n="prob1_t">کاهش نیاز به بازدیدهای حضوری مستمر</b><span data-i18n="prob1_d">دسترسی به داده‌های پایش از راه دور و اولویت‌بندی بازدیدهای میدانی بر اساس وضعیت ثبت‌شده.</span></div></div>
+    <div class="problem-item"><div class="iconbox">◉</div><div><b data-i18n="prob2_t">تشخیص زودهنگام شرایط غیرعادی</b><span data-i18n="prob2_d">رصد تغییرات و هشداردهی بر مبنای شاخص‌ها و آستانه‌های تعریف‌شده.</span></div></div>
+    <div class="problem-item"><div class="iconbox">⌘</div><div><b data-i18n="prob3_t">تصمیم‌گیری مبتنی بر داده</b><span data-i18n="prob3_d">ثبت سوابق و مشاهده روند تغییرات برای بررسی و برنامه‌ریزی بهتر.</span></div></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<div class="value-band"><div class="container value-grid">
+ <div class="value"><strong data-i18n="val1_num">۲۴/۷</strong><span data-i18n="val1_txt">رویکرد پایش مستمر سامانه</span></div>
+ <div class="value"><strong data-i18n="val2_num">از راه دور</strong><span data-i18n="val2_txt">مشاهده داده‌ها و وضعیت سامانه</span></div>
+ <div class="value"><strong data-i18n="val3_num">داده‌محور</strong><span data-i18n="val3_txt">ثبت روندها و پشتیبانی از تصمیم</span></div>
+ <div class="value"><strong data-i18n="val4_num">پیشگیرانه</strong><span data-i18n="val4_txt">توجه به نشانه‌ها پیش از تشدید مشکل</span></div>
+</div></div>
+
+<section class="section" id="features" data-section="features">
+ <div class="container">
+  <div class="section-head"><div class="kicker" data-i18n="feat_kicker">قابلیت‌های سامانه</div><h2 data-i18n="feat_title">آنچه دادرس‌آب پایش می‌کند</h2><p data-i18n="feat_desc">مجموعه‌ای از شاخص‌های فیزیکی و محیطی در کنار تحلیل روندها و وضعیت ارتباطی سامانه، تصویری قابل پیگیری از شرایط قنات ایجاد می‌کنند. جزئیات نهایی هر شاخص متناسب با پیکربندی سخت‌افزار و محل نصب تعیین می‌شود.</p></div>
+  <div class="feature-grid">
+   <article class="feature"><div class="iconbox">≋</div><h3 data-i18n="f1_t">پایش عمق آب</h3><p data-i18n="f1_d">دریافت داده عمق آب و مشاهده تغییرات آن در بازه‌های زمانی مختلف برای آگاهی از روند تغییرات.</p></article>
+   <article class="feature"><div class="iconbox">〰</div><h3 data-i18n="f2_t">پایش ارتعاشات</h3><p data-i18n="f2_d">اندازه‌گیری و تحلیل شاخص‌های لرزش و بررسی تغییرات غیرعادی در الگوی ارتعاشی ثبت‌شده.</p></article>
+   <article class="feature"><div class="iconbox">⌖</div><h3 data-i18n="f3_t">تشخیص ضربه و رخداد</h3><p data-i18n="f3_d">ثبت رخدادهای ضربه‌ای شناسایی‌شده توسط سامانه و برجسته‌سازی آن‌ها برای بررسی سریع‌تر.</p></article>
+   <article class="feature"><div class="iconbox">◉</div><h3 data-i18n="f4_t">اندازه‌گیری دما و رطوبت</h3><p data-i18n="f4_d">ثبت داده‌های محیطی مرتبط با شرایط محل نصب و فراهم‌کردن امکان بررسی روند آن‌ها.</p></article>
+   <article class="feature"><div class="iconbox">⌁</div><h3 data-i18n="f5_t">تحلیل روند و میانگین‌گیری</h3><p data-i18n="f5_d">محاسبه میانگین‌ها و نگهداری تاریخچه برای کمک به تشخیص تغییرات نسبت به وضعیت پیشین.</p></article>
+   <article class="feature"><div class="iconbox">⚑</div><h3 data-i18n="f6_t">سطوح هشدار و وضعیت</h3><p data-i18n="f6_d">ارزیابی داده‌ها بر اساس آستانه‌های تعریف‌شده و نمایش سطح هشدار جهت بررسی و اقدام متناسب.</p></article>
+   <article class="feature"><div class="iconbox">⌘</div><h3 data-i18n="f7_t">ارتباط بی‌سیم نود و هاب</h3><p data-i18n="f7_d">دریافت اطلاعات نودهای سنسوری در هاب مرکزی از طریق ارتباط بی‌سیم محلی.</p></article>
+   <article class="feature"><div class="iconbox">☁</div><h3 data-i18n="f8_t">انتقال داده به سرور</h3><p data-i18n="f8_d">ارسال داده‌ها از طریق پروتکل MQTT به زیرساخت سرور برای دسترسی و پردازش نرم‌افزاری.</p></article>
+   <article class="feature"><div class="iconbox">▤</div><h3 data-i18n="f9_t">ثبت سوابق و سلامت سامانه</h3><p data-i18n="f9_d">ثبت لاگ داده‌ها و ارسال پیام سلامت دستگاه برای پایش وضعیت ارتباط و عملکرد هاب.</p></article>
+  </div>
+ </div>
+</section>
+
+<section class="section tech-section" id="technology" data-section="technology">
+ <div class="container">
+  <div class="section-head"><div class="kicker" data-i18n="tech_kicker">معماری فنی</div><h2 data-i18n="tech_title">از عمق قنات تا داشبورد مدیریتی</h2><p data-i18n="tech_desc">دادرس‌آب از چند لایه به‌هم‌پیوسته تشکیل شده است. این معماری کمک می‌کند جمع‌آوری داده، ارتباط، پردازش و نمایش اطلاعات به‌صورت ساختاریافته انجام شود.</p></div>
+  <div class="architecture">
+   <div class="arch-step"><div class="arch-icon">⌁</div><h3 data-i18n="a1_t">۱. نودهای سنسوری</h3><p data-i18n="a1_d">اندازه‌گیری شاخص‌های فیزیکی و محیطی در محل نصب و آماده‌سازی داده‌ها.</p></div>
+   <div class="arch-step"><div class="arch-icon">▣</div><h3 data-i18n="a2_t">۲. هاب مرکزی ESP32</h3><p data-i18n="a2_d">دریافت داده با ESP-NOW، صف‌بندی، پردازش اولیه، ثبت لاگ و پایش سلامت.</p></div>
+   <div class="arch-step"><div class="arch-icon">⇄</div><h3 data-i18n="a3_t">۳. ارتباط MQTT و سرور</h3><p data-i18n="a3_d">انتقال پیام‌ها از طریق MQTT و زیرساختی مانند EMQX به لایه نرم‌افزار.</p></div>
+   <div class="arch-step"><div class="arch-icon">▥</div><h3 data-i18n="a4_t">۴. داشبورد مانیتورینگ</h3><p data-i18n="a4_d">نمایش شاخص‌ها، روندها، سوابق، وضعیت ارتباط و هشدارها برای کاربران مجاز.</p></div>
+  </div>
+  <div class="tech-note" data-i18n="tech_note">نکته فنی: اجزای نمایش‌داده‌شده بر اساس معماری و کد نمونه موجود ترسیم شده‌اند. اتصال نهایی داشبورد به API و سرور عملیاتی، امنیت ارتباط، کالیبراسیون سنسورها و آزمون میدانی باید مطابق نسخه نهایی محصول تأیید شوند.</div>
+ </div>
+</section>
+
+<section class="section" id="workflow" data-section="workflow">
+ <div class="container">
+  <div class="section-head"><div class="kicker" data-i18n="wf_kicker">فرآیند عملکرد</div><h2 data-i18n="wf_title">یک چرخه ساده؛ از اندازه‌گیری تا اقدام</h2><p data-i18n="wf_desc">اطلاعات در محل جمع‌آوری می‌شود، به هاب می‌رسد، منتقل و تحلیل می‌شود و در نهایت برای بررسی و تصمیم‌گیری در اختیار کاربر قرار می‌گیرد.</p></div>
+  <div class="workflow">
+   <div class="workflow-step"><span class="num" data-i18n="w1_g">گام ۰۱</span><h3 data-i18n="w1_t">اندازه‌گیری</h3><p data-i18n="w1_d">سنسورها شاخص‌های انتخاب‌شده را در محل نصب ثبت می‌کنند.</p></div>
+   <div class="workflow-step"><span class="num" data-i18n="w2_g">گام ۰۲</span><h3 data-i18n="w2_t">دریافت و تجمیع</h3><p data-i18n="w2_d">هاب مرکزی داده‌ها را دریافت و در قالب پیام ساختاریافته آماده می‌کند.</p></div>
+   <div class="workflow-step"><span class="num" data-i18n="w3_g">گام ۰۳</span><h3 data-i18n="w3_t">انتقال و ذخیره</h3><p data-i18n="w3_d">داده‌ها به سرور ارسال و سوابق مطابق پیکربندی نگهداری می‌شوند.</p></div>
+   <div class="workflow-step"><span class="num" data-i18n="w4_g">گام ۰۴</span><h3 data-i18n="w4_t">تحلیل و هشدار</h3><p data-i18n="w4_d">روندها و وضعیت شاخص‌ها با قواعد و آستانه‌های تعریف‌شده بررسی می‌شوند.</p></div>
+   <div class="workflow-step"><span class="num" data-i18n="w5_g">گام ۰۵</span><h3 data-i18n="w5_t">بررسی و اقدام</h3><p data-i18n="w5_d">کاربر با آگاهی بیشتر، نیاز به بررسی میدانی یا اقدام بعدی را ارزیابی می‌کند.</p></div>
+  </div>
+ </div>
+</section>
+
+<section class="section demo-section" id="demo" data-section="demo">
+ <div class="container">
+  <div class="section-head"><div class="kicker" data-i18n="demo_kicker">تجربه تعاملی</div><h2 data-i18n="demo_title">داشبورد نمونه دادرس‌آب</h2><p data-i18n="demo_desc">برای آشنایی با تجربه کاربری سامانه، یک داشبورد نمایشی آماده شده است. مقادیر این بخش صرفاً داده ساختگی هستند و وضعیت هیچ قنات واقعی را نشان نمی‌دهند.</p></div>
+  <div class="demo-shell">
+   <div class="demo-top"><b data-i18n="demo_top_title">پنل پایش قنات · نمونه نمایشی</b><span class="demo-label" data-i18n="demo_top_label">DEMO DATA · داده آزمایشی</span></div>
+   <div class="demo-body">
+    <div class="demo-tabs">
+      <button class="tab active" data-tab="overview" data-i18n="tab_overview">نمای کلی</button>
+      <button class="tab" data-tab="water" data-i18n="tab_water">عمق آب</button>
+      <button class="tab" data-tab="vibration" data-i18n="tab_vib">ارتعاشات</button>
+      <button class="tab" data-tab="environment" data-i18n="tab_env">شرایط محیطی</button>
+    </div>
+    <div class="dashboard-grid">
+     <div class="dash-card"><span id="metric1-label">عمق آب · نمونه</span><strong id="metric1">۲۴٫۶</strong><small id="metric1-unit" data-i18n="demo_val_lbl">مقدار نمایشی</small></div>
+     <div class="dash-card"><span id="metric2-label">شاخص ارتعاش · نمونه</span><strong id="metric2">۰٫۰۰۳</strong><small data-i18n="demo_val_lbl">مقدار نمایشی</small></div>
+     <div class="dash-card"><span id="metric3-label">دمای محیط · نمونه</span><strong id="metric3">۲۱٫۸°</strong><small data-i18n="demo_val_lbl">مقدار نمایشی</small></div>
+     <div class="dash-card"><span id="metric4-label">رطوبت · نمونه</span><strong id="metric4">۵۸٪</strong><small data-i18n="demo_val_lbl">مقدار نمایشی</small></div>
+    </div>
+    <div class="demo-chart-wrap">
+     <div class="demo-panel"><h4 id="chart-title">روند نمونه تغییرات شاخص‌ها</h4><div class="demo-line"><svg viewBox="0 0 600 170" preserveAspectRatio="none"><g stroke="#e8efeb" stroke-width="1"><path d="M0 25H600M0 65H600M0 105H600M0 145H600"/></g><path id="demo-area" d="M0 118 C50 100 65 80 110 92 S180 120 220 82 S290 60 330 76 S390 105 440 58 S520 72 600 30 L600 160 L0 160Z" fill="#65cdb5" opacity=".16"/><path id="demo-path" d="M0 118 C50 100 65 80 110 92 S180 120 220 82 S290 60 330 76 S390 105 440 58 S520 72 600 30" stroke="#176b68" stroke-width="3.5" fill="none" stroke-linecap="round"/></svg></div></div>
+     <div class="demo-panel"><h4 data-i18n="sys_status_t">وضعیت اجزای سامانه</h4><div class="status-list">
+       <div class="status-row"><span data-i18n="sr1">ارتباط نود و هاب</span><b class="status-pill" data-i18n="sr1_v">نمونه: متصل</b></div>
+       <div class="status-row"><span data-i18n="sr2">ارتباط سرور</span><b class="status-pill" data-i18n="sr2_v">نمونه: برقرار</b></div>
+       <div class="status-row"><span data-i18n="sr3">دریافت داده</span><b class="status-pill" data-i18n="sr3_v">نمونه: فعال</b></div>
+       <div class="status-row"><span data-i18n="sr4">رخداد نیازمند بررسی</span><b class="status-pill warn" data-i18n="sr4_v">نمونه: ندارد</b></div>
+     </div></div>
+    </div>
+    <div class="demo-description" id="demo-description">نمای کلی داده‌های ساختگی برای آشنایی با چیدمان داشبورد. شاخص‌ها، نمودارها و وضعیت‌ها در نسخه عملیاتی از داده‌های واقعی سامانه تغذیه خواهند شد.</div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<section class="section" id="audience" data-section="audience">
+ <div class="container">
+  <div class="section-head"><div class="kicker" data-i18n="aud_kicker">مخاطبان و مدل همکاری</div><h2 data-i18n="aud_title">برای هر مجموعه‌ای که مسئولیت قنات را بر عهده دارد</h2><p data-i18n="aud_desc">دادرس‌آب می‌تواند در قالب تأمین و فروش سامانه، نصب و راه‌اندازی و ارائه خدمات پشتیبانی و پایش متناسب با نیاز هر مجموعه ارائه شود.</p></div>
+  <div class="audience-grid">
+   <article class="audience"><div class="iconbox">🏛</div><h3 data-i18n="aud1_t">سازمان‌ها و نهادهای متولی</h3><p data-i18n="aud1_d">پایش متمرکز قنوات تحت مدیریت، اولویت‌بندی بازدیدها و دسترسی ساختاریافته به اطلاعات برای کارشناسان و مدیران.</p></article>
+   <article class="audience"><div class="iconbox">◈</div><h3 data-i18n="aud2_t">مالکان و بهره‌برداران قنوات</h3><p data-i18n="aud2_d">آگاهی بهتر از وضعیت قنات، مشاهده روندها و دریافت نشانه‌های هشدار برای پیگیری به‌موقع.</p></article>
+   <article class="audience"><div class="iconbox">⌂</div><h3 data-i18n="aud3_t">مشاوران و مجریان حوزه آب</h3><p data-i18n="aud3_d">استفاده از داده‌های ثبت‌شده برای بررسی شرایط، مستندسازی و پشتیبانی از خدمات تخصصی مرتبط با قنوات.</p></article>
+  </div>
+ </div>
+</section>
+
+<section class="section" id="gallery" data-section="gallery">
+ <div class="container">
+  <div class="section-head"><div class="kicker" data-i18n="gal_kicker">نگاهی به محیط کاربرد</div><h2 data-i18n="gal_title">فناوری در خدمت زیرساختی ارزشمند</h2><p data-i18n="gal_desc">تصاویر این بخش نمونه‌های موقت هستند و در مرحله نهایی با تصاویر واقعی محصول، تجهیزات و محل نصب جایگزین می‌شوند.</p></div>
+  <div class="gallery-grid">
+   <img class="large" src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1100&q=85" alt="چشم‌انداز طبیعی جایگزین">
+   <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=700&q=85" alt="مدار الکترونیکی جایگزین">
+   <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=700&q=85" alt="آزمایشگاه جایگزین">
+   <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=700&q=85" alt="فناوری جایگزین">
+   <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=700&q=85" alt="محیط کاری جایگزین">
+  </div>
+  <div class="trust-note"><b data-i18n="tn_t">شفافیت در معرفی محصول:</b> <span data-i18n="tn_d">دادرس‌آب در مرحله نمونه کامل و قابل آزمایش قرار دارد. اطلاعات مربوط به عملکرد نهایی، دقت اندازه‌گیری، دوام، پوشش ارتباطی و نتایج میدانی پس از انجام آزمون‌های معتبر و ثبت مستندات به این صفحه افزوده خواهد شد. این سامانه ابزار پایش و پشتیبان تصمیم‌گیری است و جایگزین بازرسی تخصصی یا تشخیص قطعی ایمنی سازه نیست.</span></div>
+ </div>
+</section>
+
+<section class="cta"><div class="container cta-grid"><div><h2 data-i18n="cta_t">برای پایش هوشمند قنوات آماده‌اید؟</h2><p data-i18n="cta_d">برای معرفی سامانه، بررسی شرایط نصب یا طراحی یک همکاری متناسب با نیاز مجموعه خود با ما در ارتباط باشید.</p></div><a class="btn btn-primary" style="background:var(--mint);color:#102b35" href="#contact" data-i18n="cta_b">شروع گفت‌وگو با دادرس‌آب ←</a></div></section>
+
+<section class="section" id="contact" data-section="contact">
+ <div class="container">
+  <div class="section-head"><div class="kicker" data-i18n="cnt_kicker">ارتباط با دادرس‌آب</div><h2 data-i18n="cnt_title">بیایید درباره قنوات تحت مدیریت شما صحبت کنیم</h2><p data-i18n="cnt_desc">برای دریافت اطلاعات فنی، درخواست دموی سامانه، مشاوره نصب یا بررسی همکاری سازمانی پیام بگذارید.</p></div>
+  <div class="contact-grid">
+   <div class="contact-info">
+    <div class="brand" style="color:#fff"><span data-i18n="brand_title">دادرس‌آب</span></div>
+    <h3 style="font-size:20px;margin:25px 0 5px" data-i18n="ci_t">از شناخت وضعیت تا اقدام به‌موقع</h3>
+    <p data-i18n="ci_d">تیم دادرس‌آب آماده بررسی نیازهای پایش قنوات و ارائه پیشنهاد متناسب با شرایط پروژه است.</p>
+    <div class="contact-detail"><span data-i18n="ci_e">✉ ایمیل:</span> <span data-i18n="ci_e_val">پس از نهایی‌شدن اطلاعات تماس درج شود</span></div>
+    <div class="contact-detail"><span data-i18n="ci_p">☎ تلفن:</span> <span data-i18n="ci_p_val">پس از نهایی‌شدن اطلاعات تماس درج شود</span></div>
+    <div class="contact-detail"><span data-i18n="ci_l">⌖ محل فعالیت:</span> <span data-i18n="ci_l_val">قابل تکمیل</span></div>
+   </div>
+   <form class="form-card" id="contactForm"><div class="form-grid">
+    <div class="field"><label for="name" data-i18n="f_name">نام و نام خانوادگی</label><input id="name" required placeholder="نام شما" data-i18n-ph="f_name_ph"></div>
+    <div class="field"><label for="org" data-i18n="f_org">نام سازمان یا مجموعه</label><input id="org" placeholder="نام مجموعه" data-i18n-ph="f_org_ph"></div>
+    <div class="field"><label for="phone" data-i18n="f_phone">شماره تماس</label><input id="phone" required type="tel" placeholder="شماره تماس" data-i18n-ph="f_phone_ph"></div>
+    <div class="field"><label for="request" data-i18n="f_req">موضوع درخواست</label><select id="request">
+      <option data-i18n="opt1">درخواست معرفی و دمو</option>
+      <option data-i18n="opt2">خرید و نصب سامانه</option>
+      <option data-i18n="opt3">خدمات پایش و پشتیبانی</option>
+      <option data-i18n="opt4">همکاری سازمانی</option>
+      <option data-i18n="opt5">دریافت مشخصات فنی</option>
+      <option data-i18n="opt6">سایر موارد</option>
+    </select></div>
+    <div class="field full"><label for="message" data-i18n="f_msg">توضیحات</label><textarea id="message" placeholder="درباره قنات یا نیاز مجموعه خود توضیح دهید..." data-i18n-ph="f_msg_ph"></textarea></div>
+    <div class="field full"><button class="btn btn-primary" type="submit" data-i18n="f_sub">ثبت درخواست (دموی فرم) ←</button><div class="form-message" id="formMessage" data-i18n="f_alert">فرم در حالت نمایشی است. برای دریافت پیام‌ها باید سرویس ارسال فرم یا API سایت متصل شود.</div></div>
+   </div></form>
+  </div>
+ </div>
+</section>
+</main>
+
+<div class="mobile-dock" aria-label="دسترسی سریع">
+ <a href="#demo" class="dock-demo" data-i18n="dock_demo">مشاهده دموی تعاملی</a>
+ <a href="#contact" class="dock-contact" data-i18n="dock_contact">درخواست مشاوره ↗</a>
+</div>
+
+<footer><div class="container">
+ <div class="footer-grid">
+  <div><div class="brand" style="color:white"><span data-i18n="brand_title">دادرس‌آب</span></div><p data-i18n="foot_desc">سامانه تخصصی پایش، کنترل و مانیتورینگ قنوات؛ با تمرکز بر پایش مستمر، تشخیص زودهنگام شرایط غیرعادی و کمک به مدیریت آگاهانه‌تر.</p></div>
+  <div><h4 data-i18n="foot_q">دسترسی سریع</h4><div class="footer-links"><a href="#about" data-i18n="nav_about">معرفی سامانه</a><a href="#features" data-i18n="nav_features">قابلیت‌ها</a><a href="#technology" data-i18n="nav_tech">معماری فنی</a><a href="#demo" data-i18n="nav_demo">داشبورد نمونه</a></div></div>
+  <div><h4 data-i18n="foot_c">همکاری با ما</h4><div class="footer-links"><a href="#contact" data-i18n="opt1">درخواست دمو</a><a href="#contact" data-i18n="opt2">خرید و نصب</a><a href="#contact" data-i18n="opt3">خدمات پایش</a><a href="#contact" data-i18n="opt4">همکاری سازمانی</a></div></div>
+ </div>
+ <div class="copyright"><span data-i18n="copy_1">© دادرس‌آب · تمامی حقوق محفوظ است.</span><span data-i18n="copy_2">پایش هوشمند قنوات | نسخه معرفی محصول</span></div>
+</div></footer>
+
+<div class="theme-panel" aria-label="تغییر رنگ سایت"><span data-i18n="theme_lbl">رنگ‌بندی</span><button class="swatch" style="background:#176b68" data-theme="teal" aria-label="سبزآبی"></button><button class="swatch" style="background:#245b91" data-theme="blue" aria-label="آبی"></button><button class="swatch" style="background:#56734b" data-theme="olive" aria-label="زیتونی"></button><button class="swatch" style="background:#76547d" data-theme="violet" aria-label="بنفش"></button></div>
+<script>
+const $=(s,root=document)=>root.querySelector(s);
+const $$=(s,root=document)=>[...root.querySelectorAll(s)];
+
+let currentLang = "fa";
+
+const translations = {
+ fa: {
+  topbar_sub: "سامانه هوشمند پایش، کنترل و مانیتورینگ قنوات",
+  topbar_tag: "فناوری برای حفاظت هوشمندانه از میراث آب",
+  brand_title: "دادرس‌آب",
+  nav_about: "معرفی سامانه",
+  nav_features: "قابلیت‌ها",
+  nav_tech: "فناوری",
+  nav_demo: "دموی سامانه",
+  nav_audience: "مخاطبان",
+  nav_contact: "ارتباط",
+  btn_view_tech: "مشاهده فناوری",
+  btn_req_coop: "درخواست همکاری ↗",
+  hero_eyebrow: "پایش هوشمند زیرساخت‌های حیاتی آب",
+  hero_title: 'قنات را <span>هوشمندانه</span> پایش کنید؛ پیش از آنکه دیر شود.',
+  hero_desc: "دادرس‌آب سامانه‌ای تخصصی برای پایش، کنترل و مانیتورینگ قنوات است؛ با دریافت و تحلیل پیوسته داده‌های محیطی و فیزیکی، به شناسایی زودهنگام شرایط غیرعادی، کاهش نیاز به بازدیدهای حضوری مستمر و تصمیم‌گیری آگاهانه‌تر کمک می‌کند.",
+  btn_demo: 'تجربه دموی سامانه <span>←</span>',
+  btn_consult: "درخواست معرفی و مشاوره",
+  hero_note: "راهکاری تخصصی برای مالکان، بهره‌برداران و سازمان‌های متولی قنوات",
+  card_sample_status: "نمایش نمونه وضعیت قنات",
+  card_depth: "عمق آب · مقدار نمونه",
+  card_active: "● پایش فعال",
+  card_val: "۲۴٫۶",
+  card_vib: "وضعیت لرزش",
+  card_normal: "عادی",
+  card_comm: "سلامت ارتباط",
+  card_conn: "متصل",
+  float_sub: "از داده تا تصمیم",
+  float_main: "پایش پیوسته، آگاهی بیشتر",
+  img_caption: "قنات، زیرساختی ارزشمند که حفاظت از آن به شناخت مستمر وضعیت نیاز دارد.",
+  why_kicker: "چرا دادرس‌آب؟",
+  why_title: "از بازدیدهای مقطعی تا پایش داده‌محور",
+  why_desc: "قنوات در محیطی گسترده و گاه دشوارگذر قرار دارند. اتکا به بازدیدهای حضوری و مشاهده‌های مقطعی می‌تواند شناسایی برخی تغییرات را به تأخیر بیندازد. دادرس‌آب با فراهم‌کردن بستری برای پایش مستمر، دید دقیق‌تری از وضعیت قنات در اختیار مسئولان قرار می‌دهد.",
+  prob1_t: "کاهش نیاز به بازدیدهای حضوری مستمر",
+  prob1_d: "دسترسی به داده‌های پایش از راه دور و اولویت‌بندی بازدیدهای میدانی بر اساس وضعیت ثبت‌شده.",
+  prob2_t: "تشخیص زودهنگام شرایط غیرعادی",
+  prob2_d: "رصد تغییرات و هشداردهی بر مبنای شاخص‌ها و آستانه‌های تعریف‌شده.",
+  prob3_t: "تصمیم‌گیری مبتنی بر داده",
+  prob3_d: "ثبت سوابق و مشاهده روند تغییرات برای بررسی و برنامه‌ریزی بهتر.",
+  val1_num: "۲۴/۷", val1_txt: "رویکرد پایش مستمر سامانه",
+  val2_num: "از راه دور", val2_txt: "مشاهده داده‌ها و وضعیت سامانه",
+  val3_num: "داده‌محور", val3_txt: "ثبت روندها و پشتیبانی از تصمیم",
+  val4_num: "پیشگیرانه", val4_txt: "توجه به نشانه‌ها پیش از تشدید مشکل",
+  feat_kicker: "قابلیت‌های سامانه",
+  feat_title: "آنچه دادرس‌آب پایش می‌کند",
+  feat_desc: "مجموعه‌ای از شاخص‌های فیزیکی و محیطی در کنار تحلیل روندها و وضعیت ارتباطی سامانه، تصویری قابل پیگیری از شرایط قنات ایجاد می‌کنند. جزئیات نهایی هر شاخص متناسب با پیکربندی سخت‌افزار و محل نصب تعیین می‌شود.",
+  f1_t: "پایش عمق آب", f1_d: "دریافت داده عمق آب و مشاهده تغییرات آن در بازه‌های زمانی مختلف برای آگاهی از روند تغییرات.",
+  f2_t: "پایش ارتعاشات", f2_d: "اندازه‌گیری و تحلیل شاخص‌های لرزش و بررسی تغییرات غیرعادی در الگوی ارتعاشی ثبت‌شده.",
+  f3_t: "تشخیص ضربه و رخداد", f3_d: "ثبت رخدادهای ضربه‌ای شناسایی‌شده توسط سامانه و برجسته‌سازی آن‌ها برای بررسی سریع‌تر.",
+  f4_t: "اندازه‌گیری دما و رطوبت", f4_d: "ثبت داده‌های محیطی مرتبط با شرایط محل نصب و فراهم‌کردن امکان بررسی روند آن‌ها.",
+  f5_t: "تحلیل روند و میانگین‌گیری", f5_d: "محاسبه میانگین‌ها و نگهداری تاریخچه برای کمک به تشخیص تغییرات نسبت به وضعیت پیشین.",
+  f6_t: "سطوح هشدار و وضعیت", f6_d: "ارزیابی داده‌ها بر اساس آستانه‌های تعریف‌شده و نمایش سطح هشدار جهت بررسی و اقدام متناسب.",
+  f7_t: "ارتباط بی‌سیم نود و هاب", f7_d: "دریافت اطلاعات نودهای سنسوری در هاب مرکزی از طریق ارتباط بی‌سیم محلی.",
+  f8_t: "انتقال داده به سرور", f8_d: "ارسال داده‌ها از طریق پروتکل MQTT به زیرساخت سرور برای دسترسی و پردازش نرم‌افزاری.",
+  f9_t: "ثبت سوابق و سلامت سامانه", f9_d: "ثبت لاگ داده‌ها و ارسال پیام سلامت دستگاه برای پایش وضعیت ارتباط و عملکرد هاب.",
+  tech_kicker: "معماری فنی",
+  tech_title: "از عمق قنات تا داشبورد مدیریتی",
+  tech_desc: "دادرس‌آب از چند لایه به‌هم‌پیوسته تشکیل شده است. این معماری کمک می‌کند جمع‌آوری داده، ارتباط، پردازش و نمایش اطلاعات به‌صورت ساختاریافته انجام شود.",
+  a1_t: "۱. نودهای سنسوری", a1_d: "اندازه‌گیری شاخص‌های فیزیکی و محیطی در محل نصب و آماده‌سازی داده‌ها.",
+  a2_t: "۲. هاب مرکزی ESP32", a2_d: "دریافت داده با ESP-NOW، صف‌بندی، پردازش اولیه، ثبت لاگ و پایش سلامت.",
+  a3_t: "۳. ارتباط MQTT و سرور", a3_d: "انتقال پیام‌ها از طریق MQTT و زیرساختی مانند EMQX به لایه نرم‌افزار.",
+  a4_t: "۴. داشبورد مانیتورینگ", a4_d: "نمایش شاخص‌ها، روندها، سوابق، وضعیت ارتباط و هشدارها برای کاربران مجاز.",
+  tech_note: "نکته فنی: اجزای نمایش‌داده‌شده بر اساس معماری و کد نمونه موجود ترسیم شده‌اند. اتصال نهایی داشبورد به API و سرور عملیاتی، امنیت ارتباط، کالیبراسیون سنسورها و آزمون میدانی باید مطابق نسخه نهایی محصول تأیید شوند.",
+  wf_kicker: "فرآیند عملکرد",
+  wf_title: "یک چرخه ساده؛ از اندازه‌گیری تا اقدام",
+  wf_desc: "اطلاعات در محل جمع‌آوری می‌شود، به هاب می‌رسد، منتقل و تحلیل می‌شود و در نهایت برای بررسی و تصمیم‌گیری در اختیار کاربر قرار می‌گیرد.",
+  w1_g: "گام ۰۱", w1_t: "اندازه‌گیری", w1_d: "سنسورها شاخص‌های انتخاب‌شده را در محل نصب ثبت می‌کنند.",
+  w2_g: "گام ۰۲", w2_t: "دریافت و تجمیع", w2_d: "هاب مرکزی داده‌ها را دریافت و در قالب پیام ساختاریافته آماده می‌کند.",
+  w3_g: "گام ۰۳", w3_t: "انتقال و ذخیره", w3_d: "داده‌ها به سرور ارسال و سوابق مطابق پیکربندی نگهداری می‌شوند.",
+  w4_g: "گام ۰۴", w4_t: "تحلیل و هشدار", w4_d: "روندها و وضعیت شاخص‌ها با قواعد و آستانه‌های تعریف‌شده بررسی می‌شوند.",
+  w5_g: "گام ۰۵", w5_t: "بررسی و اقدام", w5_d: "کاربر با آگاهی بیشتر، نیاز به بررسی میدانی یا اقدام بعدی را ارزیابی می‌کند.",
+  demo_kicker: "تجربه تعاملی",
+  demo_title: "داشبورد نمونه دادرس‌آب",
+  demo_desc: "برای آشنایی با تجربه کاربری سامانه، یک داشبورد نمایشی آماده شده است. مقادیر این بخش صرفاً داده ساختگی هستند و وضعیت هیچ قنات واقعی را نشان نمی‌دهند.",
+  demo_top_title: "پنل پایش قنات · نمونه نمایشی",
+  demo_top_label: "DEMO DATA · داده آزمایشی",
+  tab_overview: "نمای کلی", tab_water: "عمق آب", tab_vib: "ارتعاشات", tab_env: "شرایط محیطی",
+  demo_val_lbl: "مقدار نمایشی",
+  sys_status_t: "وضعیت اجزای سامانه",
+  sr1: "ارتباط نود و هاب", sr1_v: "نمونه: متصل",
+  sr2: "ارتباط سرور", sr2_v: "نمونه: برقرار",
+  sr3: "دریافت داده", sr3_v: "نمونه: فعال",
+  sr4: "رخداد نیازمند بررسی", sr4_v: "نمونه: ندارد",
+  aud_kicker: "مخاطبان و مدل همکاری",
+  aud_title: "برای هر مجموعه‌ای که مسئولیت قنات را بر عهده دارد",
+  aud_desc: "دادرس‌آب می‌تواند در قالب تأمین و فروش سامانه، نصب و راه‌اندازی و ارائه خدمات پشتیبانی و پایش متناسب با نیاز هر مجموعه ارائه شود.",
+  aud1_t: "سازمان‌ها و نهادهای متولی", aud1_d: "پایش متمرکز قنوات تحت مدیریت، اولویت‌بندی بازدیدها و دسترسی ساختاریافته به اطلاعات برای کارشناسان و مدیران.",
+  aud2_t: "مالکان و بهره‌برداران قنوات", aud2_d: "آگاهی بهتر از وضعیت قنات، مشاهده روندها و دریافت نشانه‌های هشدار برای پیگیری به‌موقع.",
+  aud3_t: "مشاوران و مجریان حوزه آب", aud3_d: "استفاده از داده‌های ثبت‌شده برای بررسی شرایط، مستندسازی و پشتیبانی از خدمات تخصصی مرتبط با قنوات.",
+  gal_kicker: "نگاهی به محیط کاربرد",
+  gal_title: "فناوری در خدمت زیرساختی ارزشمند",
+  gal_desc: "تصاویر این بخش نمونه‌های موقت هستند و در مرحله نهایی با تصاویر واقعی محصول، تجهیزات و محل نصب جایگزین می‌شوند.",
+  tn_t: "شفافیت در معرفی محصول:",
+  tn_d: "دادرس‌آب در مرحله نمونه کامل و قابل آزمایش قرار دارد. اطلاعات مربوط به عملکرد نهایی، دقت اندازه‌گیری، دوام، پوشش ارتباطی و نتایج میدانی پس از انجام آزمون‌های معتبر و ثبت مستندات به این صفحه افزوده خواهد شد. این سامانه ابزار پایش و پشتیبان تصمیم‌گیری است و جایگزین بازرسی تخصصی یا تشخیص قطعی ایمنی سازه نیست.",
+  cta_t: "برای پایش هوشمند قنوات آماده‌اید؟",
+  cta_d: "برای معرفی سامانه، بررسی شرایط نصب یا طراحی یک همکاری متناسب با نیاز مجموعه خود با ما در ارتباط باشید.",
+  cta_b: "شروع گفت‌وگو با دادرس‌آب ←",
+  cnt_kicker: "ارتباط با دادرس‌آب",
+  cnt_title: "بیایید درباره قنوات تحت مدیریت شما صحبت کنیم",
+  cnt_desc: "برای دریافت اطلاعات فنی، درخواست دموی سامانه، مشاوره نصب یا بررسی همکاری سازمانی پیام بگذارید.",
+  ci_t: "از شناخت وضعیت تا اقدام به‌موقع",
+  ci_d: "تیم دادرس‌آب آماده بررسی نیازهای پایش قنوات و ارائه پیشنهاد متناسب با شرایط پروژه است.",
+  ci_e: "✉ ایمیل:", ci_e_val: "پس از نهایی‌شدن اطلاعات تماس درج شود",
+  ci_p: "☎ تلفن:", ci_p_val: "پس از نهایی‌شدن اطلاعات تماس درج شود",
+  ci_l: "⌖ محل فعالیت:", ci_l_val: "قابل تکمیل",
+  f_name: "نام و نام خانوادگی", f_org: "نام سازمان یا مجموعه", f_phone: "شماره تماس", f_req: "موضوع درخواست",
+  f_msg: "توضیحات", f_sub: "ثبت درخواست (دموی فرم) ←",
+  f_alert: "فرم در حالت نمایشی است. برای دریافت پیام‌ها باید سرویس ارسال فرم یا API سایت متصل شود.",
+  f_name_ph: "نام شما", f_org_ph: "نام مجموعه", f_phone_ph: "شماره تماس", f_msg_ph: "درباره قنات یا نیاز مجموعه خود توضیح دهید...",
+  opt1: "درخواست معرفی و دمو", opt2: "خرید و نصب سامانه", opt3: "خدمات پایش و پشتیبانی", opt4: "همکاری سازمانی", opt5: "دریافت مشخصات فنی", opt6: "سایر موارد",
+  dock_demo: "مشاهده دموی تعاملی", dock_contact: "درخواست مشاوره ↗",
+  foot_desc: "سامانه تخصصی پایش، کنترل و مانیتورینگ قنوات؛ با تمرکز بر پایش مستمر، تشخیص زودهنگام شرایط غیرعادی و کمک به مدیریت آگاهانه‌تر.",
+  foot_q: "دسترسی سریع", foot_c: "همکاری با ما",
+  copy_1: "© دادرس‌آب · تمامی حقوق محفوظ است.", copy_2: "پایش هوشمند قنوات | نسخه معرفی محصول",
+  theme_lbl: "رنگ‌بندی"
+ },
+ en: {
+  topbar_sub: "Smart Monitoring & Control System for Qanats",
+  topbar_tag: "Technology for Intelligent Water Heritage Preservation",
+  brand_title: "DadrasAb",
+  nav_about: "About",
+  nav_features: "Features",
+  nav_tech: "Technology",
+  nav_demo: "Live Demo",
+  nav_audience: "Audience",
+  nav_contact: "Contact",
+  btn_view_tech: "View Technology",
+  btn_req_coop: "Request Partnership ↗",
+  hero_eyebrow: "Smart Monitoring of Critical Water Infrastructure",
+  hero_title: 'Monitor Qanats <span>Intelligently</span>, Before It Is Too Late.',
+  hero_desc: "DadrasAb is a specialized system for monitoring and controlling qanats. By continuously receiving and analyzing environmental and physical data, it facilitates early detection of anomalies, reduces manual field visits, and enables data-driven decision making.",
+  btn_demo: 'Experience Demo <span>→</span>',
+  btn_consult: "Request Consultation",
+  hero_note: "A dedicated solution for qanat owners, operators, and water management authorities.",
+  card_sample_status: "Sample Qanat Status",
+  card_depth: "Water Depth · Sample Data",
+  card_active: "● Active Monitoring",
+  card_val: "24.6",
+  card_vib: "Vibration Level",
+  card_normal: "Normal",
+  card_comm: "Connection",
+  card_conn: "Online",
+  float_sub: "From Data to Decision",
+  float_main: "Continuous Monitoring, Greater Insight",
+  img_caption: "Qanat: a vital infrastructure requiring continuous status insight for protection.",
+  why_kicker: "Why DadrasAb?",
+  why_title: "From Occasional Visits to Data-Driven Monitoring",
+  why_desc: "Qanats stretch across vast and remote terrains. Relying solely on physical inspections can delay early detection of critical structural changes. DadrasAb provides continuous remote visibility for better management.",
+  prob1_t: "Reduced Field Inspections",
+  prob1_d: "Remote access to sensor telemetry enables prioritization of physical field visits.",
+  prob2_t: "Early Anomaly Detection",
+  prob2_d: "Continuous tracking and automated alerts based on custom parameter thresholds.",
+  prob3_t: "Data-Driven Decision Making",
+  prob3_d: "Historical data logging and trend visualization for long-term strategic planning.",
+  val1_num: "24/7", val1_txt: "Continuous Monitoring Approach",
+  val2_num: "Remote", val2_txt: "Real-time Telemetry & Status",
+  val3_num: "Data-Driven", val3_txt: "Historical Trends & Insights",
+  val4_num: "Proactive", val4_txt: "Early Warning Before Escalation",
+  feat_kicker: "System Capabilities",
+  feat_title: "What DadrasAb Monitors",
+  feat_desc: "A suite of physical and environmental metrics combined with connectivity health logs offers a complete overview of the qanat structure.",
+  f1_t: "Water Depth Monitoring", f1_d: "Tracks real-time water level changes over dynamic time intervals.",
+  f2_t: "Vibration Analysis", f2_d: "Measures structural vibration trends and flags abnormal seismic patterns.",
+  f3_t: "Impact & Shock Detection", f3_d: "Logs abrupt physical impact events for immediate assessment.",
+  f4_t: "Temperature & Humidity", f4_d: "Records ambient microclimate parameters inside the qanat structure.",
+  f5_t: "Trend & Average Analysis", f5_d: "Computes moving averages to highlight deviations from baseline metrics.",
+  f6_t: "Multi-level Alerting", f6_d: "Evaluates sensor metrics against predefined thresholds to issue alerts.",
+  f7_t: "Wireless Node-to-Hub Link", f7_d: "Gathers localized sensor node data at the main hub via low-power wireless.",
+  f8_t: "Cloud & MQTT Telemetry", f8_d: "Transmits structured payloads over MQTT to server infrastructures like EMQX.",
+  f9_t: "System Health Logging", f9_d: "Performs device heartbeat telemetry and maintains offline buffer logs.",
+  tech_kicker: "Technical Architecture",
+  tech_title: "From Deep Underground to Executive Dashboard",
+  tech_desc: "DadrasAb consists of an integrated multi-tier hardware and software framework designed for robust data flow.",
+  a1_t: "1. Sensor Nodes", a1_d: "Deployed underground to acquire environmental and physical metrics.",
+  a2_t: "2. ESP32 Central Hub", a2_d: "Handles ESP-NOW reception, payload queuing, edge processing, and logging.",
+  a3_t: "3. MQTT Broker & Server", a3_d: "Secure message transmission via MQTT/EMQX to backend software services.",
+  a4_t: "4. Web Monitoring Dashboard", a4_d: "Visualizes trends, status reports, telemetry logs, and active alerts.",
+  tech_note: "Technical Note: Architecture components are based on existing design schematics. Production deployment requires hardware field-calibration, secure channel setup, and site verification.",
+  wf_kicker: "Operational Workflow",
+  wf_title: "A Streamlined Loop: From Sensor to Action",
+  wf_desc: "Data is gathered at site, aggregated by the hub, transmitted to cloud layers, and presented for immediate action.",
+  w1_g: "Step 01", w1_t: "Measurement", w1_d: "Sensors continuously record physical and ambient metrics.",
+  w2_g: "Step 02", w2_t: "Aggregation", w2_d: "Central hub compiles node payloads into structured messages.",
+  w3_g: "Step 03", w3_t: "Transmission", w3_d: "Telemetry streams securely to cloud endpoints and log buffers.",
+  w4_g: "Step 04", w4_t: "Analysis & Alerts", w4_d: "Backend rules evaluate data points to trigger automated notifications.",
+  w5_g: "Step 05", w5_t: "Review & Action", w5_d: "Operators inspect alerts and dispatch field teams efficiently.",
+  demo_kicker: "Interactive Experience",
+  demo_title: "DadrasAb Sample Dashboard",
+  demo_desc: "Explore the user interface template below. All metrics shown are simulated demo values for UI demonstration.",
+  demo_top_title: "Qanat Monitoring Panel · Interactive Preview",
+  demo_top_label: "DEMO DATA · Simulated Telemetry",
+  tab_overview: "Overview", tab_water: "Water Depth", tab_vib: "Vibration", tab_env: "Environment",
+  demo_val_lbl: "Sample Value",
+  sys_status_t: "System Components Status",
+  sr1: "Node-to-Hub Link", sr1_v: "Demo: Connected",
+  sr2: "Server Link", sr2_v: "Demo: Online",
+  sr3: "Data Ingestion", sr3_v: "Demo: Active",
+  sr4: "Pending Review", sr4_v: "Demo: None",
+  aud_kicker: "Audience & Collaboration",
+  aud_title: "Tailored Solutions for Water Stakeholders",
+  aud_desc: "DadrasAb can be deployed as a complete hardware-software turnkey solution, supported by maintenance and monitoring services.",
+  aud1_t: "Government & Water Authorities", aud1_d: "Centralized monitoring of regional qanats with structured managerial dashboards.",
+  aud2_t: "Qanat Owners & Farmers", aud2_d: "Direct visibility into water output trends, stability warnings, and operational health.",
+  aud3_t: "Engineering & Water Consultants", aud3_d: "Empowering technical assessments with continuous empirical sensor datasets.",
+  gal_kicker: "Application Field Overview",
+  gal_title: "Technology Preserving Ancient Engineering",
+  gal_desc: "Images below are placeholders representing prototype setup and testing environments.",
+  tn_t: "Product Transparency:",
+  tn_d: "DadrasAb is currently in full prototype and lab-testing status. Empirical field performance data, battery endurance metrics, and wireless range benchmarks will be published upon final field validation. This system is a decision-support monitoring tool and does not replace certified structural engineering safety inspections.",
+  cta_t: "Ready to Upgrade Your Qanat Monitoring?",
+  cta_d: "Contact our technical team to discuss deployment requirements, custom hardware setups, or strategic partnerships.",
+  cta_b: "Start Conversation ←",
+  cnt_kicker: "Get in Touch",
+  cnt_title: "Let's Discuss Your Qanat Project",
+  cnt_desc: "Send us a inquiry for technical specs, live system demonstrations, or custom partnership proposals.",
+  ci_t: "From Data Awareness to Timely Action",
+  ci_d: "The DadrasAb engineering team is ready to evaluate your field conditions and tailor a deployment strategy.",
+  ci_e: "✉ Email:", ci_e_val: "To be published upon contact finalization",
+  ci_p: "☎ Phone:", ci_p_val: "To be published upon contact finalization",
+  ci_l: "⌖ Location:", ci_l_val: "To be specified",
+  f_name: "Full Name", f_org: "Organization / Company", f_phone: "Phone Number", f_req: "Inquiry Type",
+  f_msg: "Message Details", f_sub: "Submit Request (Demo) ←",
+  f_alert: "Form is in demo mode. Connect a form endpoint backend to receive real messages.",
+  f_name_ph: "Your name", f_org_ph: "Organization name", f_phone_ph: "Phone number", f_msg_ph: "Describe your qanat or project requirements...",
+  opt1: "Request Product Demo", opt2: "System Purchase & Install", opt3: "Monitoring & Maintenance", opt4: "Institutional Partnership", opt5: "Technical Specifications", opt6: "Other Inquiries",
+  dock_demo: "View Live Demo", dock_contact: "Consultation ↗",
+  foot_desc: "Specialized qanat monitoring system focusing on continuous telemetry, early anomaly detection, and data-driven water management.",
+  foot_q: "Quick Links", foot_c: "Partnership",
+  copy_1: "© DadrasAb · All Rights Reserved.", copy_2: "Smart Qanat Monitoring | Technical Product Showcase",
+  theme_lbl: "Theme"
+ }
+};
+
+const DadrasConfig={
+ brand:"دادرس‌آب",
+ themes:{
+  teal:{teal:"#176b68",mint:"#65cdb5",ink:"#102b35"},
+  blue:{teal:"#245b91",mint:"#7cc5e8",ink:"#142d45"},
+  olive:{teal:"#56734b",mint:"#a9c77c",ink:"#243729"},
+  violet:{teal:"#76547d",mint:"#c6a4d2",ink:"#35283d"}
+ },
+ dashboard:{
+  fa: {
+    overview:{labels:["عمق آب · نمونه","شاخص ارتعاش · نمونه","دمای محیط · نمونه","رطوبت · نمونه"],values:["۲۴٫۶","۰٫۰۰۳","۲۱٫۸°","۵۸٪"],title:"روند نمونه تغییرات شاخص‌ها",description:"نمای کلی داده‌های ساختگی برای آشنایی با چیدمان داشبورد."},
+    water:{labels:["عمق آب · نمونه","میانگین کوتاه‌مدت","میانگین بلندمدت","وضعیت تغییر"],values:["۲۴٫۶","۲۴٫۱","۲۳٫۸","عادی"],title:"روند نمونه عمق آب",description:"این نما نمونه‌ای از مقایسه مقدار فعلی با میانگین‌های زمانی است."},
+    vibration:{labels:["شاخص ارتعاش","میانگین روزانه","میانگین هفتگی","سطح هشدار"],values:["۰٫۰۰۳","۰٫۰۰۲","۰٫۰۰۱","عادی"],title:"روند نمونه ارتعاشات",description:"این نما نمونه‌ای از نمایش شاخص ارتعاش و تاریخچه آن است."},
+    environment:{labels:["دمای محیط","میانگین دما","رطوبت","وضعیت حسگر"],values:["۲۱٫۸°","۲۱٫۲°","۵۸٪","فعال"],title:"روند نمونه شرایط محیطی",description:"این نما نمونه‌ای از داده‌های محیطی ثبت‌شده در محل نصب است."}
+  },
+  en: {
+    overview:{labels:["Water Depth · Sample","Vibration Index","Ambient Temp","Humidity"],values:["24.6","0.003","21.8°","58%"],title:"Sample Parameter Trends",description:"Overview of simulated dashboard metrics."},
+    water:{labels:["Water Depth","Short-term Avg","Long-term Avg","Trend Status"],values:["24.6","24.1","23.8","Normal"],title:"Sample Water Depth Trend",description:"Compares real-time values against calculated historical averages."},
+    vibration:{labels:["Vibration Index","Daily Average","Weekly Average","Alert Level"],values:["0.003","0.002","0.001","Normal"],title:"Sample Vibration Metrics",description:"Tracks seismic vibration indices over operational timeframes."},
+    environment:{labels:["Ambient Temp","Average Temp","Humidity","Sensor Status"],values:["21.8°","21.2°","58%","Active"],title:"Sample Environmental Conditions",description:"Monitors ambient microclimate parameters inside the qanat channel."}
+  }
+ }
+};
+
+function updateLanguage(lang) {
+ currentLang = lang;
+ document.documentElement.lang = lang;
+ document.documentElement.dir = lang === "fa" ? "rtl" : "ltr";
+ $("#langToggle").textContent = lang === "fa" ? "EN" : "FA";
+ 
+ $$("[data-i18n]").forEach(el => {
+  const key = el.getAttribute("data-i18n");
+  if (translations[lang][key]) {
+   el.innerHTML = translations[lang][key];
+  }
+ });
+
+ $$("[data-i18n-ph]").forEach(el => {
+  const key = el.getAttribute("data-i18n-ph");
+  if (translations[lang][key]) {
+   el.placeholder = translations[lang][key];
+  }
+ });
+
+ // Update Hero card value
+ $("#card_val").textContent = lang === "fa" ? "۲۴٫۶" : "24.6";
+
+ const activeTab = $(".tab.active") ? $(".tab.active").dataset.tab : "overview";
+ updateDashboardTab(activeTab);
+}
+
+function updateDashboardTab(tabKey) {
+ const d = DadrasConfig.dashboard[currentLang][tabKey];
+ ["metric1-label","metric2-label","metric3-label","metric4-label"].forEach((id,i)=>$("#"+id).textContent=d.labels[i]);
+ ["metric1","metric2","metric3","metric4"].forEach((id,i)=>$("#"+id).textContent=d.values[i]);
+ $("#chart-title").textContent=d.title;
+ $("#demo-description").textContent=d.description + (currentLang === "fa" ? " تمام مقادیر این نما ساختگی و صرفاً برای نمایش رابط کاربری هستند." : " All metric values shown here are simulated for user interface demonstration.");
+}
+
+$("#langToggle").addEventListener("click", () => {
+ updateLanguage(currentLang === "fa" ? "en" : "fa");
+});
+
+$$(".tab").forEach(btn=>btn.addEventListener("click",()=>{
+ $$(".tab").forEach(x=>x.classList.remove("active"));
+ btn.classList.add("active");
+ updateDashboardTab(btn.dataset.tab);
+}));
+
+$$(".swatch").forEach(btn=>btn.addEventListener("click",()=>{
+ const t=DadrasConfig.themes[btn.dataset.theme];
+ document.documentElement.style.setProperty("--teal",t.teal);
+ document.documentElement.style.setProperty("--mint",t.mint);
+ document.documentElement.style.setProperty("--ink",t.ink);
+}));
+
+$("#menuToggle").addEventListener("click",()=>{
+ const nav=$("#navlinks"),open=nav.classList.toggle("open");
+ $("#menuToggle").setAttribute("aria-expanded",String(open));
+ $("#menuToggle").setAttribute("aria-label",open?"بستن منو":"باز کردن منو");
+ $("#menuToggle").textContent=open?"×":"☰";
+});
+
+$$(".navlinks a").forEach(a=>a.addEventListener("click",()=>{
+ $("#navlinks").classList.remove("open");
+ $("#menuToggle").setAttribute("aria-expanded","false");
+ $("#menuToggle").setAttribute("aria-label","باز کردن منو");
+ $("#menuToggle").textContent="☰";
+}));
+
+$("#contactForm").addEventListener("submit",e=>{e.preventDefault();$("#formMessage").style.display="block";});
+
+const progress=$("#readingProgress");
+const updateProgress=()=>{
+ const max=document.documentElement.scrollHeight-window.innerHeight;
+ progress.style.width=(max>0?(window.scrollY/max)*100:0)+"%";
+};
+window.addEventListener("scroll",updateProgress,{passive:true});updateProgress();
+
+if("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches){
+ document.body.classList.add("reveal-ready");
+ const revealTargets=$$("[data-section],.feature,.workflow-step,.audience");
+ revealTargets.forEach(el=>el.classList.add("js-reveal"));
+ const observer=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+   if(entry.isIntersecting){entry.target.classList.add("is-visible");observer.unobserve(entry.target);}
+  });
+ },{threshold:.08,rootMargin:"0px 0px -35px 0px"});
+ revealTargets.forEach(el=>observer.observe(el));
+}
+</script>
+</body>
+</html>
